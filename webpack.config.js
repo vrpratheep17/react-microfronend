@@ -6,12 +6,28 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = {
   entry: "./src/app.js",
   output: {
-    path: path.resolve(__dirname, "dist/tech"),
+    path: path.resolve(__dirname, "dist"),
     filename: "main.js",
+    publicPath: "/tech/",
     libraryTarget: "umd",
     library: "MicroApp",
     umdNamedDefine: true,
     clean: true,
+  },
+  devServer: {
+    port: 3000,
+    historyApiFallback: {
+      rewrites: [{ from: /^\/tech\//, to: "/tech/index.html" }],
+    },
+    static: {
+      directory: path.join(__dirname, "dist"),
+      publicPath: "/tech/",
+    },
+    devMiddleware: {
+      publicPath: "/tech/",
+    },
+    compress: true,
+    hot: true,
   },
   module: {
     rules: [
@@ -44,9 +60,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./public/index.html",
       filename: "index.html",
+      publicPath: "/tech/",
     }),
     new MiniCssExtractPlugin({
-      filename: "styles.css",
+      filename: "styles.[contenthash].css",
     }),
   ],
   externals: {
